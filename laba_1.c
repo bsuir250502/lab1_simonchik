@@ -21,8 +21,9 @@ struct faculty{
 };
 
 int input_faculty(faculty*,int);
-void output_faculty(faculty*,int);
-int search_excellent_student(faculty*,int);
+void search_excellent_student(faculty*,int);
+void sorting_excellent_student(specialitys,int);
+void output_list_of_sorting_specilitys(specialitys,int);
 
 int main()
 {
@@ -30,8 +31,7 @@ int main()
     int number_of_faculty = 0;
     puts("Enter information about the university, to complete the entry, press 'exit'");
     number_of_faculty = input_faculty(info, number_of_faculty);
-    output_faculty(info,number_of_faculty);
-    printf("%d",search_excellent_student(info,number_of_faculty));
+    search_excellent_student(info,number_of_faculty);
     return 0;
 }
 
@@ -109,12 +109,13 @@ void output_faculty(faculty* info,int number_of_faculty)
                puts(info[i].sp[number_of_speciality].st[number_of_student].name);
 }
 
-int search_excellent_student(faculty* info,int number_of_faculty)
+void search_excellent_student(faculty* info,int number_of_faculty)
 {
     char name_of_speciality[256];
     int number_of_excellent_student=0;
     int i, k, number_of_speciality, number_of_marks, quarter, ind=0, number_of_student;
     students std;
+    specialitys input_specialitys;
     puts("Enter name of speciality for search excellnt students");
     fflush(stdin);
     gets(name_of_speciality);
@@ -122,6 +123,7 @@ int search_excellent_student(faculty* info,int number_of_faculty)
             for(number_of_speciality = 0;number_of_speciality < info[i].number_of_speciality; number_of_speciality++)
                 if(!(strcmp(info[i].sp[number_of_speciality].name,name_of_speciality)))
                     {
+                       
                         for(number_of_student = 0;number_of_student < info[i].sp[number_of_speciality].number_of_student; number_of_student++)
                             for(k = number_of_student; k < info[i].sp[number_of_speciality].number_of_student; k++)
                             {
@@ -148,9 +150,51 @@ int search_excellent_student(faculty* info,int number_of_faculty)
                                 }
                                 else ind = 0;
                             }
-                        for(number_of_marks = 0; number_of_marks < info[i].sp[number_of_speciality].number_of_student; number_of_marks++) 
-                            puts(info[i].sp[number_of_speciality].st[number_of_marks].name);
-                        return  number_of_excellent_student;
-                    }
+                                          input_specialitys =  info[i].sp[number_of_speciality];
+                        sorting_excellent_student( input_specialitys , number_of_excellent_student);
+                        return;
+                     }
+                
 }
 
+void sorting_excellent_student(specialitys input_specialitys, int number_of_excellent_student)
+{
+    int i,j;
+    students spesh;  
+    for(i = 0; i < number_of_excellent_student-1; i++)
+  	{
+		for (j = i+1; j < number_of_excellent_student; j++)
+		{			
+			if (strcmp( input_specialitys.st[i].name,  input_specialitys.st[j].name) > 0)
+			{
+				spesh = input_specialitys.st[i];
+				 input_specialitys.st[i] =  input_specialitys.st[j];
+				 input_specialitys.st[j] = spesh;
+			} 
+		}
+	}
+    for(i = number_of_excellent_student; i <  input_specialitys.number_of_student -1; i++ )
+        for (j = i+1; j <  input_specialitys.number_of_student; j++)
+		{			
+			if (strcmp(input_specialitys.st[i].name, input_specialitys.st[j].name) > 0)
+			{
+				spesh = input_specialitys.st[i];
+				input_specialitys.st[i] = input_specialitys.st[j];
+				input_specialitys.st[j] = spesh;
+			} 
+        }
+     output_list_of_sorting_specilitys(input_specialitys, number_of_excellent_student);
+     return;
+}
+
+void output_list_of_sorting_specilitys(specialitys input_specialitys, int number_of_excellent_student)
+{
+    int i;
+    puts("The list of excellent students:");
+    for(i = 0; i < number_of_excellent_student; i++)
+        puts(input_specialitys.st[i].name);
+    puts("The list other students:");
+    for(i = number_of_excellent_student; i<input_specialitys.number_of_student;i++)
+        puts(input_specialitys.st[i].name);
+    return;
+}
