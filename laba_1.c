@@ -46,6 +46,8 @@ int input_faculty(faculty* info, int number_of_faculty)
         __fpurge(stdin);
         gets(info[number_of_faculty].name);
         if(!(strcmp(info[number_of_faculty].name, "exit"))) break;
+
+
         else
         {   
             while(number_of_speciality < 5)
