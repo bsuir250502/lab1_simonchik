@@ -43,7 +43,7 @@ int input_faculty(faculty* info, int number_of_faculty)
     while(number_of_faculty < 3)
     {
         printf("Enter name of %d faculty: ",number_of_faculty+1);
-        __fpurge(stdin);
+        fflush(stdin);
         gets(info[number_of_faculty].name);
         if(!(strcmp(info[number_of_faculty].name, "exit"))) break;
 
@@ -53,7 +53,7 @@ int input_faculty(faculty* info, int number_of_faculty)
             while(number_of_speciality < 5)
             {
                 printf("Enter name %d speciality of faculty %s: ",number_of_speciality+1, info[number_of_faculty].name);
-                __fpurge(stdin);
+                fflush(stdin);
                 gets( info[number_of_faculty].sp[number_of_speciality].name);
                 if(!(strcmp(info[number_of_faculty].sp[number_of_speciality].name, "exit"))) 
                 {
@@ -66,7 +66,7 @@ int input_faculty(faculty* info, int number_of_faculty)
                     while(number_of_student < 30)
                     {
                         printf("Enter %d student's surname by speciality %s: ",number_of_student, info[number_of_faculty].sp[number_of_speciality].name);
-                        __fpurge(stdin);
+                        fflush(stdin);
                         gets(info[number_of_faculty].sp[number_of_speciality].st[number_of_student].name);
                         if(!(strcmp(info[number_of_faculty].sp[number_of_speciality].st[number_of_student].name, "exit"))) 
                         {   info[number_of_faculty].sp[number_of_speciality].number_of_student = number_of_student;
@@ -109,7 +109,7 @@ void search_excellent_student(faculty* info,int number_of_faculty)
     students std;
     specialitys input_specialitys;
     puts("Enter name of speciality for search excellnt students");
-    __fpurge(stdin);
+    fflush(stdin);
     gets(name_of_speciality);
         for(i = 0; i < number_of_faculty; i++)
             for(j = 0; j < info[i].number_of_speciality; j++)
