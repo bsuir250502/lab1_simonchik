@@ -6,8 +6,7 @@ typedef struct students{
     char name[256];
     int marks[25];
     int number_of_marks;
-}students;     
-
+}students;
 
 typedef struct specialitys{
     char name[256];
