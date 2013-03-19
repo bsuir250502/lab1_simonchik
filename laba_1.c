@@ -65,7 +65,7 @@ int input_faculty(faculty* info, int number_of_faculty)
                 {
                     while(number_of_student < 30)
                     {
-                        printf("Enter %d student's surname by speciality %s: ",number_of_student, info[number_of_faculty].sp[number_of_speciality].name);
+                        printf("Enter %d student's surname by speciality %s: ",number_of_student +1, info[number_of_faculty].sp[number_of_speciality].name);
                         fflush(stdin);
                         gets(info[number_of_faculty].sp[number_of_speciality].st[number_of_student].name);
                         if(!(strcmp(info[number_of_faculty].sp[number_of_speciality].st[number_of_student].name, "exit"))) 
