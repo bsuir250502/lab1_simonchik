@@ -22,7 +22,7 @@ typedef struct faculty {
     int number_of_speciality;
 } faculty;
 
-char *my_gets(char *str, size_t strin_size)
+char *my_gets(char *str, int strin_size)
 {
     fgets(str, strin_size, stdin);
     str[strlen(str) - 1] = '\0';
@@ -30,6 +30,23 @@ char *my_gets(char *str, size_t strin_size)
 }
 
 specialitys sorting_lists(specialitys spech, int num_of_excellent_stud);
+
+int input_number_mark(void)
+{
+    char num_mark[string_size];
+    int num;
+    while(1){
+        fgets(num_mark,string_size,stdin);
+        num = atoi(num_mark);
+        if(num<0){
+            printf("ERROR!!! ENTER NUMBER OF MARK");
+            continue;
+        }
+        break;
+     }
+     return num;
+}
+
 
 int input_of_fac(faculty * info)
 {
@@ -89,10 +106,7 @@ void input_of_mark(faculty * info, int num_of_fac, int num_of_spech,int num_of_s
     while (num_of_mark < 25) {
         printf("Enter %d marks of %s: ", num_of_mark + 1,info[num_of_fac].sp[num_of_spech].st[num_of_stud].name);
         __fpurge(stdin);
-        if (!scanf("%d", &info[num_of_fac].sp[num_of_spech].st[num_of_stud].marks[num_of_mark])) {
-            printf("ERROR!!!, ENTER NUMBER\n");
-            continue;
-        }
+        info[num_of_fac].sp[num_of_spech].st[num_of_stud].marks[num_of_mark]=input_number_mark();
         if (!info[num_of_fac].sp[num_of_spech].st[num_of_stud].marks[num_of_mark]) {
             info[num_of_fac].sp[num_of_spech].st[num_of_stud].number_of_marks = num_of_mark;
             break;
