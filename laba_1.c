@@ -2,12 +2,13 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdio_ext.h>
+
 #define string_size 256
+#define number_mark 4
 
 typedef struct students {
     char name[string_size];
-    int marks[25];
-    int number_of_marks;
+    int marks[number_mark];
 } students;
 
 typedef struct specialitys {
@@ -29,24 +30,21 @@ char *my_gets(char *str, int strin_size)
     return str;
 }
 
-specialitys sorting_lists(specialitys spech, int num_of_excellent_stud);
-
 int input_number_mark(void)
 {
     char num_mark[string_size];
     int num;
-    while(1){
-        fgets(num_mark,string_size,stdin);
+    while (1) {
+        fgets(num_mark, string_size, stdin);
         num = atoi(num_mark);
-        if(num<0){
-            printf("ERROR!!! ENTER NUMBER OF MARK");
+        if (num <= 0) {
+            printf("ERROR!!! ENTER NUMBER: ");
             continue;
         }
         break;
-     }
-     return num;
+    }
+    return num;
 }
-
 
 int input_of_fac(faculty * info)
 {
@@ -59,9 +57,8 @@ int input_of_fac(faculty * info)
             info[num_of_fac].number_of_speciality = num_of_fac;
             break;
         }
-
-        else
-            num_of_fac++;
+            else
+                num_of_fac++;
     }
     return num_of_fac;
 }
@@ -70,16 +67,14 @@ void input_of_spech(faculty * info, int num_of_fac)
 {
     int num_of_spech = 0;
     while (num_of_spech < 5) {
-        printf("Enter name %d speciality of faculty %s: ",
-               num_of_spech + 1, info[num_of_fac].name);
+        printf("Enter name %d speciality of faculty %s: ",num_of_spech + 1, info[num_of_fac].name);
         my_gets(info[num_of_fac].sp[num_of_spech].name, string_size);
         if (!(strcmp(info[num_of_fac].sp[num_of_spech].name, "exit"))) {
             info[num_of_fac].number_of_speciality = num_of_spech;
             break;
         }
-
-        else
-            num_of_spech++;
+            else
+                num_of_spech++;
     }
 }
 
@@ -91,130 +86,94 @@ void input_of_stud(faculty * info, int num_of_fac, int num_of_spech)
         __fpurge(stdin);
         my_gets(info[num_of_fac].sp[num_of_spech].st[num_of_stud].name,string_size);
         if (!(strcmp(info[num_of_fac].sp[num_of_spech].st[num_of_stud].name,"exit"))) {
-            info[num_of_fac].sp[num_of_spech].number_of_student =num_of_stud;
+            info[num_of_fac].sp[num_of_spech].number_of_student = num_of_stud;
             break;
-        } 
-        else
-            num_of_stud++;
+        }   
+            else
+                num_of_stud++;
     }
 }
 
 void input_of_mark(faculty * info, int num_of_fac, int num_of_spech,int num_of_stud)
 {
-    printf("Enter marks, to complete the entry, press '0'\n");
+
     int num_of_mark = 0;
-    while (num_of_mark < 25) {
+    while (num_of_mark < number_mark) {
         printf("Enter %d marks of %s: ", num_of_mark + 1,info[num_of_fac].sp[num_of_spech].st[num_of_stud].name);
         __fpurge(stdin);
-        info[num_of_fac].sp[num_of_spech].st[num_of_stud].marks[num_of_mark]=input_number_mark();
-        if (!info[num_of_fac].sp[num_of_spech].st[num_of_stud].marks[num_of_mark]) {
-            info[num_of_fac].sp[num_of_spech].st[num_of_stud].number_of_marks = num_of_mark;
-            break;
-        } 
-        else
-            num_of_mark++;
+        info[num_of_fac].sp[num_of_spech].st[num_of_stud].marks[num_of_mark] = input_number_mark();
+        num_of_mark++;
     }
 }
 
-specialitys search_spech(faculty * info, int number_of_faculty, char *name_of_speciality)
+specialitys search_spech(faculty * info, int num_of_fac)
 {
+    char name_of_speciality[string_size];
     int i, j;
-    for (i = 0; i < number_of_faculty; i++) {
-        for (j = 0; j < info[i].number_of_speciality; j++) {
-            if (!(strcmp(info[i].sp[j].name, name_of_speciality)))
-                return info[i].sp[j];
+    while (1) {
+        puts("Enter name of speciality for search excellnt students");
+        __fpurge(stdin);
+        my_gets(name_of_speciality, string_size);
+        for (i = 0; i < num_of_fac; i++) {
+            for (j = 0; j < info[i].number_of_speciality; j++) {
+                if (!(strcmp(info[i].sp[j].name, name_of_speciality)))
+                    return info[i].sp[j];
+            }
         }
+        printf("ERROR,INCCORECT INPUT\n");
     }
-    printf("ERROR!!!! there is no such specialty");
-    exit(1);
 }
 
-int number_of_excellent_stud(specialitys spech)
+int compare_students_by_name(const void *a, const void *b)
 {
-    int num_of_excellent_stud = 0;
-    int i, j, ind = 0, quarter;
+    students *pa = (students *) a;
+    students *pb = (students *) b;
+    return strcmp(pa->name, pb->name);
+}
+
+specialitys sorting_list(specialitys spech)
+{
+    int i;
     for (i = 0; i < spech.number_of_student; i++) {
-        quarter = spech.st[i].number_of_marks * 0.25;
-        for (j = 0; j < spech.st[i].number_of_marks; j++) {
+        qsort(&(spech.st[0]), spech.number_of_student, sizeof(students),compare_students_by_name);
+    }
+    return spech;
+}
+
+void output_lists(specialitys spech)
+{
+    int i = 0,j, ind = 0;
+    int quarter = number_mark * 0.25;
+    printf("The list of excellent students of spechiality %s: \n",spech.name);
+    for (i = 0; i < spech.number_of_student; i++) {
+        for (j = 0; j < number_mark; j++) {
             if (spech.st[i].marks[j] < 4) {
                 ind = 1;
                 quarter = 0;
                 break;
-            }
-            else if (spech.st[i].marks[j] == 4)
+            } else if (spech.st[i].marks[j] == 4)
                 ind++;
         }
-        if (ind <= quarter)
-            num_of_excellent_stud++;
-        else
-            ind = 0;
+        if (ind <= quarter) {
+            puts(spech.st[i].name);
+        }
+        ind = 0;
     }
-    return num_of_excellent_stud;
-}
-
-specialitys creating_lists(specialitys spech, int num_of_excellent_stud)
-{
-    int i = 0, j, k, ind = 0, quarter;
-    students std;
-    for (i = 0; i < spech.number_of_student - 1; i++) {
-        for (j = i; j < spech.number_of_student; j++) {
-            quarter = spech.st[j].number_of_marks * 0.25;
-            for (k = 0; k < spech.st[j].number_of_marks; k++) {
-                if (spech.st[j].marks[k] < 4) {
-                    ind = 1;
-                    quarter = 0;
-                    break;
-                }
-                else if (spech.st[j].marks[k] == 4)
-                    ind++;
-            }
-            if (ind <= quarter) {
-                std = spech.st[j];
-                spech.st[j] = spech.st[i];
-                spech.st[i] = std;
+    printf("The list of other students of spechiality %s: \n", spech.name);
+    for (i = 0; i < spech.number_of_student; i++) {
+        for (j = 0; j < number_mark; j++) {
+            if (spech.st[i].marks[j] < 4) {
+                ind = 1;
+                quarter = 0;
                 break;
-            } else
-                ind = 0;
+            } else if (spech.st[i].marks[j] == 4)
+                ind++;
         }
-    }
-    spech = sorting_lists(spech, num_of_excellent_stud);
-    return spech;
-}
-
-specialitys sorting_lists(specialitys spech, int num_of_excellent_stud)
-{
-    int i, j;
-    students stud;
-    for (i = 0; i < num_of_excellent_stud - 1; i++) {
-        for (j = i + 1; j < num_of_excellent_stud; j++) {
-            if (strcmp(spech.st[i].name, spech.st[j].name) > 0) {
-                stud = spech.st[i];
-                spech.st[i] = spech.st[j];
-                spech.st[j] = stud;
-            }
+        if (ind > quarter) {
+            puts(spech.st[i].name);
         }
+        ind = 0;
     }
-    for (i = num_of_excellent_stud; i < spech.number_of_student - 1; i++) {
-        for (j = i + 1; j < spech.number_of_student; j++) {
-            if (strcmp(spech.st[i].name, spech.st[j].name) > 0) {
-                stud = spech.st[i];
-                spech.st[i] = spech.st[j];
-                spech.st[j] = stud;
-            }
-        }
-    }
-    return spech;
-}
-
-void output_list_of_sorting_specilitys(specialitys spech,int num_of_excellent_stud)
-{
-    int i;
-    printf("The list of excellent students of spechiality %s:\n",spech.name);
-    for (i = 0; i < num_of_excellent_stud; i++)
-        puts(spech.st[i].name);
-    printf("The list other students of spechiality %s:\n", spech.name);
-    for (i = num_of_excellent_stud; i < spech.number_of_student; i++)
-        puts(spech.st[i].name);
 }
 
 int main()
@@ -222,7 +181,7 @@ int main()
     puts("Enter information about the university, to complete the entry, press 'exit'");
     faculty info[10];
     specialitys spech;
-    int i, j, k, num_of_excellent_stud;
+    int i, j, k;
     int number_of_faculty = input_of_fac(info);
     for (i = 0; i < number_of_faculty; i++) {
         input_of_spech(info, i);
@@ -233,13 +192,8 @@ int main()
             }
         }
     }
-    char name_of_speciality[string_size];
-    puts("Enter name of speciality for search excellnt students");
-    __fpurge(stdin);
-    my_gets(name_of_speciality, string_size);
-    spech = search_spech(info, number_of_faculty, name_of_speciality);
-    num_of_excellent_stud = number_of_excellent_stud(spech);
-    spech = creating_lists(spech, num_of_excellent_stud);
-    output_list_of_sorting_specilitys(spech, num_of_excellent_stud);
+    spech = search_spech(info, number_of_faculty);
+    spech = sorting_list(spech);
+    output_lists(spech);
     return 0;
 }
