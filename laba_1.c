@@ -133,56 +133,52 @@ int compare_students_by_name(const void *a, const void *b)
 
 specialitys sorting_list(specialitys spech)
 {
-    int i;
-    for (i = 0; i < spech.number_of_student; i++) {
-        qsort(&(spech.st[0]), spech.number_of_student, sizeof(students),compare_students_by_name);
-    }
-    return spech;
+     qsort(&(spech.st[0]), spech.number_of_student, sizeof(students),compare_students_by_name);
+     return spech;
+}
+
+int check_marks(students st)
+{
+    int i = 0; int ind = 0;
+    int quarter = number_mark * 0.25;
+    for(i=0;i<number_mark;i++){
+        if (st.marks[i] < 4) {
+                ind = 1;
+                quarter = 0;
+                break;
+            } else if (st.marks[i] == 4)
+                ind++;
+        }
+    return ind-quarter;
 }
 
 void output_lists(specialitys spech)
 {
-    int i = 0,j, ind = 0;
-    int quarter = number_mark * 0.25;
+    int i , ind = 0;
     printf("The list of excellent students of spechiality %s: \n",spech.name);
     for (i = 0; i < spech.number_of_student; i++) {
-        for (j = 0; j < number_mark; j++) {
-            if (spech.st[i].marks[j] < 4) {
-                ind = 1;
-                quarter = 0;
-                break;
-            } else if (spech.st[i].marks[j] == 4)
-                ind++;
-        }
-        if (ind <= quarter) {
+        ind = check_marks(spech.st[i]);
+        if(ind<0){
             puts(spech.st[i].name);
         }
-        ind = 0;
     }
     printf("The list of other students of spechiality %s: \n", spech.name);
     for (i = 0; i < spech.number_of_student; i++) {
-        for (j = 0; j < number_mark; j++) {
-            if (spech.st[i].marks[j] < 4) {
-                ind = 1;
-                quarter = 0;
-                break;
-            } else if (spech.st[i].marks[j] == 4)
-                ind++;
-        }
-        if (ind > quarter) {
+        ind = check_marks(spech.st[i]);
+        if(ind>=0){
             puts(spech.st[i].name);
         }
-        ind = 0;
     }
 }
 
+
 int main()
-{
-    puts("Enter information about the university, to complete the entry, press 'exit'");
-    faculty info[10];
+{   
+    faculty info[3];
     specialitys spech;
-    int i, j, k;
-    int number_of_faculty = input_of_fac(info);
+    int i, j, k,number_of_faculty;
+    puts("Enter information about the university, to complete the entry, press 'exit'");
+    number_of_faculty = input_of_fac(info);
     for (i = 0; i < number_of_faculty; i++) {
         input_of_spech(info, i);
         for (j = 0; j < info[i].number_of_speciality; j++) {

@@ -1,3 +1,13 @@
-all:
-	gcc -Wall laba_1.c -std=c99 -o laba_1 && ./laba_1 
-	
+OBJ = laba_1.o
+CFLAGS = -Wall -std=c99
+
+all: bin
+
+bin: $(OBJ)
+	gcc $(CFLAGS) $(OBJ) -o bin
+
+%.o : %.c
+	gcc $(CFLAGS) -c $<
+
+clean:
+	rm bin $(OBJ)
