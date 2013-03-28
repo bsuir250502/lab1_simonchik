@@ -133,7 +133,7 @@ int compare_students_by_name(const void *a, const void *b)
 
 specialitys sorting_list(specialitys spech)
 {
-     qsort(&(spech.st[0]), spech.number_of_student, sizeof(students),compare_students_by_name);
+     qsort(&(spech.st), spech.number_of_student, sizeof(students),compare_students_by_name);
      return spech;
 }
 
@@ -171,12 +171,33 @@ void output_lists(specialitys spech)
     }
 }
 
+void checkHelp(char **argv)
+{
+    if (!strcmp(argv[1], "-h")) {
+        printf("================================================================================\n"
+               " MANUAL:\n\n"
+               "Enter information about the university:\n"
+               "*faculty;\n"
+               "*specialty\n"
+               "*name of the student\n"
+               "*marks of exams (4 pieces, enter NUMBERS)\n"
+               "To complete the entry, press 'exit'\n"
+               "Then enter the specialty you are interested in your input and the program\n"
+               "will generate 2 lists of students:\n"
+               "* The list of exxelent students;\n"
+               "* The list of other students;\n"                           
+               "================================================================================\n");
+        exit(0);
+    }
+}
 
-int main()
-{   
+int main(int argc, char **argv)
+{   if (argc > 1) {
+        checkHelp(argv);
+    }
     faculty info[3];
     specialitys spech;
-    int i, j, k,number_of_faculty;
+    int i, j, k,number_of_faculty;    
     puts("Enter information about the university, to complete the entry, press 'exit'");
     number_of_faculty = input_of_fac(info);
     for (i = 0; i < number_of_faculty; i++) {
