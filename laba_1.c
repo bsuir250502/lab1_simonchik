@@ -133,7 +133,7 @@ int compare_students_by_name(const void *a, const void *b)
 
 specialitys sorting_list(specialitys spech)
 {
-     qsort(&(spech.st), spech.number_of_student, sizeof(students),compare_students_by_name);
+     qsort(spech.st, spech.number_of_student, sizeof(students),compare_students_by_name);
      return spech;
 }
 
